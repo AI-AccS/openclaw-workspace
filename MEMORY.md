@@ -144,3 +144,9 @@ We run several successful businesses together:
 - **Ollama API key**: `ec2ba16d039a4739ab397eb993c62315.P86I5g42PSMSBEQLLTwOQlfa`
 - **OpenAI credentials MUST be in auth-profiles.json, not just env vars** — for fallback to work, all providers need registered auth profiles
 - **Watchdog task caused false positives** — disabled in favor of OpenClaw's native auto-fallback mechanism which is more reliable
+- **OpenRouter API key**: `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`
+- **Perplexity Sonar Pro Search** via OpenRouter = `openrouter/perplexity/sonar-pro-search` (alias: `search`) — use this for ALL web searches
+- **Heartbeat model**: `ollama/llama3.3:latest` — free, runs locally, no rate limits. Handles simple tool calls fine.
+- **Model cost strategy**: Main chat = Claude Sonnet (paid, worth it). Heartbeats = Ollama (free). Emergency fallbacks = OpenAI.
+- **OpenAI credentials MUST be in auth-profiles.json, not just env vars** — for fallback to work, all providers need registered auth profiles
+- **Watchdog task caused false positives** — disabled in favor of OpenClaw's native auto-fallback mechanism which is more reliable
