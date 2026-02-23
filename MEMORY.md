@@ -137,3 +137,10 @@ We run several successful businesses together:
 - **Always switch back to Claude Sonnet once rate limits clear** — it's the most capable model and the preferred primary
 - **OpenAI credentials MUST be in auth-profiles.json, not just env vars** — for fallback to work, all providers need registered auth profiles
 - **Watchdog task caused false positives** — disabled in favor of OpenClaw's native auto-fallback mechanism which is more reliable
+- **Ollama MUST have `api:'ollama'` in models.providers.ollama config** — missing this causes `No API provider registered for api: undefined` which crashes the gateway with an unhandled promise rejection
+- **Gateway Scheduled Task has no RestartOnFailure by default** — configured to restart 10 times at 1-min intervals on crash
+- **Anthropic Tier 1 limits: 30K input TPM** — session context of 80k+ tokens blows the limit on every single message; keep context compact via compaction
+- **Never directly edit models.json** — gateway overwrites it on restart; always use `openclaw config set models.providers.*`
+- **Ollama API key**: `ec2ba16d039a4739ab397eb993c62315.P86I5g42PSMSBEQLLTwOQlfa`
+- **OpenAI credentials MUST be in auth-profiles.json, not just env vars** — for fallback to work, all providers need registered auth profiles
+- **Watchdog task caused false positives** — disabled in favor of OpenClaw's native auto-fallback mechanism which is more reliable
