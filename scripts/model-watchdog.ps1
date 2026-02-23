@@ -8,6 +8,7 @@ $logFile = "$env:USERPROFILE\.openclaw\workspace\memory\watchdog.log"
 $stateFile = "$env:USERPROFILE\.openclaw\workspace\memory\watchdog-state.json"
 $primaryModel = "anthropic/claude-sonnet-4-6"
 $backupModel = "openai/gpt-4o"
+$lastResortModel = "ollama/llama3.3:latest"
 
 function Write-Log($msg) {
     $ts = Get-Date -Format "yyyy-MM-dd HH:mm:ss"

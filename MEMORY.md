@@ -135,3 +135,5 @@ We run several successful businesses together:
 - jq installed via winget — needed for session-logs skill
 - **Auto-fallback does NOT fire if the gateway is mid-restart** — must manually `session_status --model openai/gpt-4o` to recover immediately
 - **Always switch back to Claude Sonnet once rate limits clear** — it's the most capable model and the preferred primary
+- **OpenAI credentials MUST be in auth-profiles.json, not just env vars** — for fallback to work, all providers need registered auth profiles
+- **Watchdog task caused false positives** — disabled in favor of OpenClaw's native auto-fallback mechanism which is more reliable
