@@ -18,7 +18,8 @@ Multi-provider failover chain configured:
 1. **Primary:** `anthropic/claude-sonnet-4-6` (best quality)
 2. **Fallback 1:** `openai/gpt-4o` (different provider — survives Anthropic rate limits)
 3. **Fallback 2:** `anthropic/claude-haiku-4-5` (cheaper Anthropic tier)
-4. **Fallback 3:** `openai/gpt-4o-mini` (last resort, still capable)
+4. **Fallback 3:** `openai/gpt-4o-mini` (capable, very cheap)
+5. **Fallback 4:** `ollama/llama3.3:latest` (LOCAL — completely free, no credits, no rate limits, just slower)
 
 OpenClaw auto-switches on rate limit or model unavailability. Both Anthropic and OpenAI keys are active.
 
@@ -28,13 +29,21 @@ OpenClaw auto-switches on rate limit or model unavailability. Both Anthropic and
 - Alerts at: 70% context (warn), 85% context (alert), 90% (recommend session reset)
 - Tracks state in `memory/heartbeat-state.json`
 
+### Model Philosophy
+- **Preferred model:** `anthropic/claude-sonnet-4-6` — most capable, always return here once restrictions clear
+- **Always be evaluating:** Watch for better models (new Claude releases, GPT upgrades, etc.) — propose switching if demonstrably better
+- **Test before committing:** Any new model must work perfectly before staying — if it underperforms, switch back and report
+- **Never switch silently:** Always tell the operator when switching model and why
+- **Never downgrade without reason:** Don't drop to a weaker model unless forced by a limit
+
 ### Known Risks & Mitigations
 | Risk | Mitigation |
 |---|---|
-| Anthropic rate limit | Auto-switch to OpenAI gpt-4o |
-| Both providers rate limited | gpt-4o-mini as last resort |
+| Anthropic rate limit | Force-switch to `openai/gpt-4o` immediately via `session_status --model openai/gpt-4o`; switch back to Claude when clear |
+| Both cloud providers rate limited | Fall back to local `ollama/llama3.3:latest` — free, always available, just slower |
 | Context window full | Warn early, recommend session restart |
 | Gateway stopped | Alert operator, self-restart if possible |
+| Rate limit during gateway restart | Auto-fallback won't fire mid-restart — manually force-switch with session_status (learned 2026-02-23) |
 
 ---
 
@@ -124,3 +133,5 @@ We run several successful businesses together:
 - web_search requires Brave API key — use web_fetch instead for internet research
 - Skills can be installed via `npx clawhub install <slug>` or `npm install -g clawhub` then `clawhub install <slug>`
 - jq installed via winget — needed for session-logs skill
+- **Auto-fallback does NOT fire if the gateway is mid-restart** — must manually `session_status --model openai/gpt-4o` to recover immediately
+- **Always switch back to Claude Sonnet once rate limits clear** — it's the most capable model and the preferred primary

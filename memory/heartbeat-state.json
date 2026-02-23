@@ -3,8 +3,8 @@
     "email": null,
     "calendar": null,
     "weather": null,
-    "gateway": null,
-    "contextWindow": null
+    "gateway": 1740305640,
+    "contextWindow": 1740305640
   },
   "notes": "Created 2026-02-23. Tracks last check times to avoid redundant API calls.",
   "currentModel": "anthropic/claude-sonnet-4-6",

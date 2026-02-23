@@ -19,7 +19,11 @@ Every heartbeat, run these checks silently. Only alert if something needs attent
 - Fallback 1: `openai/gpt-4o`
 - Fallback 2: `anthropic/claude-haiku-4-5`
 - Fallback 3: `openai/gpt-4o-mini`
+- Fallback 4: `ollama/llama3.3:latest` (LOCAL — free, no rate limits, but slower)
 - If you notice you're NOT running on the primary model, alert: "⚠️ Running on fallback model [X] — primary may have rate limits."
+- **If Anthropic rate limit hits:** immediately run `session_status --model openai/gpt-4o` to force-switch. Do NOT wait for auto-fallback during a gateway restart.
+- **If running on a fallback model:** periodically attempt to switch back to `anthropic/claude-sonnet-4-6` — it's the most capable and preferred. Test it works before confirming the switch.
+- **New/better models:** If a significantly better model is released (e.g. new Claude or GPT version), propose switching to the operator. Test first, report result.
 
 ### 3. Gateway Status
 - Run `openclaw status` if you suspect issues
