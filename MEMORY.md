@@ -63,13 +63,34 @@ We run several successful businesses together:
 
 ## Key Projects
 
-### Project 1: Grandstream Wave → UCM6308 Direct Connection
-- Company uses a **Grandstream UCM6308** telephone server on-premises
-- Remote team members use **Grandstream Wave** app
-- Wave currently points to Grandstream cloud — need to redirect to our local UCM6308
-- We have a **static IP from BT**; BT Business Router with port forwarding already configured (done by previous OpenClaw session)
-- **Next step:** Configure Wave app login/server info to point to our UCM6308's static IP
-- **Future:** Use ElevenLabs agents + UCM6308 to make automated calls to HMRC on behalf of the team
+### Project 1: Grandstream Wave → UCM6308 Direct Connection — IN PROGRESS
+
+**Infrastructure (all confirmed working 2026-02-23):**
+- UCM6308 internal IP: `192.168.1.148`
+- BT Static IP: `81.137.249.200`
+- DNS A record `tel.scot.ltd` → 81.137.249.200 ✅ (live, TTL 600)
+- DNS A record `call.scot.ltd` → **NOT YET CREATED** (needs adding by user in their DNS provider)
+- UCM web UI accessible externally at `http://81.137.249.200:8080` ✅
+
+**Port forwarding on BT router (all configured):**
+- SIP: external 5060 UDP → 192.168.1.148:5060
+- Secure SIP: external 5061 UDP → 192.168.1.148:5061
+- RTP Media: external 10000-20000 UDP → 192.168.1.148:10000-20000
+- Web UI: external 8080 TCP → 192.168.1.148:80
+
+**Next steps:**
+1. User to add `call.scot.ltd` A record → 81.137.249.200 in their DNS provider
+2. Check/set UCM6308 NAT settings (external host = call.scot.ltd) — need UCM admin credentials
+3. Configure each Wave app with: SIP Server = call.scot.ltd, Port = 5060, Auth = extension + password
+
+**Wave configuration (per user):**
+- SIP Server: call.scot.ltd (once DNS created)
+- SIP Server Port: 5060
+- SIP User ID / Auth ID: their extension number
+- Password: their SIP password
+- Outbound Proxy: call.scot.ltd, Port 5060
+
+**Future:** Use ElevenLabs agents + UCM6308 to make automated calls to HMRC on behalf of the team
 
 ### Project 2: MCP Hub — BUILT & RUNNING ✅
 - Location: `~/.openclaw/workspace/mcp-hub/`
