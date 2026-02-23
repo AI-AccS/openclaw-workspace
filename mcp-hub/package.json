@@ -1,0 +1,25 @@
+{
+  "name": "mcp-hub",
+  "version": "1.0.0",
+  "description": "Centralised MCP Hub for all business integrations",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch",
+    "clean": "Remove-Item -Recurse -Force dist -ErrorAction SilentlyContinue"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "axios": "^1.6.0",
+    "dotenv": "^16.4.7",
+    "zod": "^3.25.0",
+    "md5": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/md5": "^2.3.5",
+    "typescript": "^5.3.0"
+  }
+}

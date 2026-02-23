@@ -1,0 +1,157 @@
+{
+  "version": 1,
+  "skills": {
+    "1password": {
+      "version": "1.0.1",
+      "installedAt": 1771728740881
+    },
+    "apple-notes": {
+      "version": "1.0.0",
+      "installedAt": 1771728743598
+    },
+    "apple-reminders": {
+      "version": "1.0.0",
+      "installedAt": 1771728746698
+    },
+    "bear-notes": {
+      "version": "1.0.0",
+      "installedAt": 1771728749720
+    },
+    "blogwatcher": {
+      "version": "1.0.0",
+      "installedAt": 1771728752458
+    },
+    "blucli": {
+      "version": "1.0.0",
+      "installedAt": 1771728755457
+    },
+    "bluebubbles": {
+      "version": "1.0.0",
+      "installedAt": 1771728758114
+    },
+    "camsnap": {
+      "version": "1.0.0",
+      "installedAt": 1771728761105
+    },
+    "discord": {
+      "version": "1.0.1",
+      "installedAt": 1771728768285
+    },
+    "eightctl": {
+      "version": "1.0.0",
+      "installedAt": 1771728771270
+    },
+    "gemini": {
+      "version": "1.0.0",
+      "installedAt": 1771728773755
+    },
+    "gifgrep": {
+      "version": "1.0.1",
+      "installedAt": 1771728778672
+    },
+    "github": {
+      "version": "1.0.0",
+      "installedAt": 1771728781335
+    },
+    "gog": {
+      "version": "1.0.0",
+      "installedAt": 1771728783799
+    },
+    "goplaces": {
+      "version": "1.0.0",
+      "installedAt": 1771728786320
+    },
+    "himalaya": {
+      "version": "1.0.0",
+      "installedAt": 1771728789028
+    },
+    "imsg": {
+      "version": "1.0.0",
+      "installedAt": 1771728791850
+    },
+    "mcporter": {
+      "version": "1.0.0",
+      "installedAt": 1771728794563
+    },
+    "model-usage": {
+      "version": "1.0.0",
+      "installedAt": 1771728797126
+    },
+    "nano-banana-pro": {
+      "version": "1.0.1",
+      "installedAt": 1771728799798
+    },
+    "nano-pdf": {
+      "version": "1.0.0",
+      "installedAt": 1771728802369
+    },
+    "obsidian": {
+      "version": "1.0.0",
+      "installedAt": 1771728804916
+    },
+    "openai-whisper": {
+      "version": "1.0.0",
+      "installedAt": 1771728807424
+    },
+    "openhue": {
+      "version": "1.0.0",
+      "installedAt": 1771728809899
+    },
+    "oracle": {
+      "version": "1.0.1",
+      "installedAt": 1771728812515
+    },
+    "ordercli": {
+      "version": "1.0.0",
+      "installedAt": 1771728815312
+    },
+    "peekaboo": {
+      "version": "1.0.0",
+      "installedAt": 1771728817862
+    },
+    "sag": {
+      "version": "1.0.0",
+      "installedAt": 1771728820709
+    },
+    "slack": {
+      "version": "1.0.0",
+      "installedAt": 1771728827826
+    },
+    "songsee": {
+      "version": "1.0.0",
+      "installedAt": 1771728830715
+    },
+    "sonoscli": {
+      "version": "1.0.0",
+      "installedAt": 1771728833323
+    },
+    "spotify-player": {
+      "version": "1.0.0",
+      "installedAt": 1771728836169
+    },
+    "summarize": {
+      "version": "1.0.0",
+      "installedAt": 1771728838727
+    },
+    "things-mac": {
+      "version": "1.0.0",
+      "installedAt": 1771728841226
+    },
+    "tmux": {
+      "version": "1.0.0",
+      "installedAt": 1771728844167
+    },
+    "trello": {
+      "version": "1.0.0",
+      "installedAt": 1771728846763
+    },
+    "video-frames": {
+      "version": "1.0.0",
+      "installedAt": 1771728849504
+    },
+    "session-logs": {
+      "version": "1.0.0",
+      "installedAt": 1771728978676
+    }
+  }
+}
