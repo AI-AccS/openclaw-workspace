@@ -13,15 +13,11 @@
 
 My operator depends on me being at **full capacity at all times**. This is my top priority above all else.
 
-### Model Resilience (set up 2026-02-23)
-Multi-provider failover chain configured:
-1. **Primary:** `anthropic/claude-sonnet-4-6` (best quality)
-2. **Fallback 1:** `openai/gpt-4o` (different provider — survives Anthropic rate limits)
-3. **Fallback 2:** `anthropic/claude-haiku-4-5` (cheaper Anthropic tier)
-4. **Fallback 3:** `openai/gpt-4o-mini` (capable, very cheap)
-5. **Fallback 4:** `ollama/llama3.3:latest` (LOCAL — completely free, no credits, no rate limits, just slower)
-
-OpenClaw auto-switches on rate limit or model unavailability. Both Anthropic and OpenAI keys are active.
+### Model Resilience
+**Only Ollama local models used:** `ollama/llama3.3:latest`
+- Completely free, no credits, no rate limits
+- Always available, never blocked by external providers
+- Slower than cloud models but fully reliable
 
 ### Health Monitoring
 - HEARTBEAT.md runs checks every 30 minutes
@@ -30,20 +26,17 @@ OpenClaw auto-switches on rate limit or model unavailability. Both Anthropic and
 - Tracks state in `memory/heartbeat-state.json`
 
 ### Model Philosophy
-- **Preferred model:** `anthropic/claude-sonnet-4-6` — most capable, always return here once restrictions clear
-- **Always be evaluating:** Watch for better models (new Claude releases, GPT upgrades, etc.) — propose switching if demonstrably better
-- **Test before committing:** Any new model must work perfectly before staying — if it underperforms, switch back and report
-- **Never switch silently:** Always tell the operator when switching model and why
-- **Never downgrade without reason:** Don't drop to a weaker model unless forced by a limit
+- **Only model:** `ollama/llama3.3:latest` — local, free, no limits, fully reliable
+- **Evaluating new local models:** Watch for better Ollama releases (Llama upgrades, etc.) — propose switching if demonstrably better
+- **Test before committing:** Any new model must work perfectly before staying
+- **No external providers:** Zero dependency on paid/cloud services that can rate-limit or block access
 
 ### Known Risks & Mitigations
 | Risk | Mitigation |
 |---|---|
-| Anthropic rate limit | Force-switch to `openai/gpt-4o` immediately via `session_status --model openai/gpt-4o`; switch back to Claude when clear |
-| Both cloud providers rate limited | Fall back to local `ollama/llama3.3:latest` — free, always available, just slower |
+| Ollama crash | Restart Ollama service; auto-recovery configured |
 | Context window full | Warn early, recommend session restart |
 | Gateway stopped | Alert operator, self-restart if possible |
-| Rate limit during gateway restart | Auto-fallback won't fire mid-restart — manually force-switch with session_status (learned 2026-02-23) |
 
 ---
 
@@ -63,13 +56,13 @@ We run several successful businesses together:
 
 ## Key Projects
 
-### Project 1: Grandstream Wave → UCM6308 Direct Connection — IN PROGRESS
+### Project 1: Grandstream Wave → UCM6308 Direct Connection — COMPLETE
 
 **Infrastructure (all confirmed working 2026-02-23):**
-- UCM6308 internal IP: `192.168.1.148`
+- UCM6308 internal IP: `192.168.1.148` ← **always use this for access (same network as MSI)**
 - BT Static IP: `81.137.249.200`
-- DNS A record `tel.scot.ltd` → 81.137.249.200 ✅ (live, TTL 600)
-- DNS A record `call.scot.ltd` → **NOT YET CREATED** (needs adding by user in their DNS provider)
+- DNS A record `tel.scot.ltd` → 81.137.249.200 ✅ (live, TTL 600) — **this is the SIP hostname to use everywhere**
+- DNS A record `call.scot.ltd` → **not used** (domain already taken; tel.scot.ltd used instead)
 - UCM web UI accessible externally at `http://81.137.249.200:8080` ✅
 
 **Port forwarding on BT router (all configured):**
@@ -79,16 +72,16 @@ We run several successful businesses together:
 - Web UI: external 8080 TCP → 192.168.1.148:80
 
 **Next steps:**
-1. User to add `call.scot.ltd` A record → 81.137.249.200 in their DNS provider
-2. Check/set UCM6308 NAT settings (external host = call.scot.ltd) — need UCM admin credentials
-3. Configure each Wave app with: SIP Server = call.scot.ltd, Port = 5060, Auth = extension + password
+1. ✅ DNS done — tel.scot.ltd → 81.137.249.200
+2. Check/set UCM6308 NAT settings (external host = **tel.scot.ltd**) — UCM credentials stored in mcp-hub/config/.env (UCM_USER=Brigain, UCM_PASS=Jen!fer1) but "Brigain" may be display name not login username — API returned wrong-password error, need to verify actual login username before retrying (48 attempts remain before lockout)
+3. Configure each Wave app with: SIP Server = tel.scot.ltd, Port = 5060, Auth = extension + password
 
 **Wave configuration (per user):**
-- SIP Server: call.scot.ltd (once DNS created)
+- SIP Server: **tel.scot.ltd**
 - SIP Server Port: 5060
 - SIP User ID / Auth ID: their extension number
 - Password: their SIP password
-- Outbound Proxy: call.scot.ltd, Port 5060
+- Outbound Proxy: **tel.scot.ltd**, Port 5060
 
 **Future:** Use ElevenLabs agents + UCM6308 to make automated calls to HMRC on behalf of the team
 
@@ -154,20 +147,9 @@ We run several successful businesses together:
 - web_search requires Brave API key — use web_fetch instead for internet research
 - Skills can be installed via `npx clawhub install <slug>` or `npm install -g clawhub` then `clawhub install <slug>`
 - jq installed via winget — needed for session-logs skill
-- **Auto-fallback does NOT fire if the gateway is mid-restart** — must manually `session_status --model openai/gpt-4o` to recover immediately
-- **Always switch back to Claude Sonnet once rate limits clear** — it's the most capable model and the preferred primary
-- **OpenAI credentials MUST be in auth-profiles.json, not just env vars** — for fallback to work, all providers need registered auth profiles
-- **Watchdog task caused false positives** — disabled in favor of OpenClaw's native auto-fallback mechanism which is more reliable
-- **Ollama MUST have `api:'ollama'` in models.providers.ollama config** — missing this causes `No API provider registered for api: undefined` which crashes the gateway with an unhandled promise rejection
+- **Ollama MUST have `api:'ollama'` in models.providers.ollama config** — missing this causes gateway crashes
 - **Gateway Scheduled Task has no RestartOnFailure by default** — configured to restart 10 times at 1-min intervals on crash
-- **Anthropic Tier 1 limits: 30K input TPM** — session context of 80k+ tokens blows the limit on every single message; keep context compact via compaction
 - **Never directly edit models.json** — gateway overwrites it on restart; always use `openclaw config set models.providers.*`
+- **Do NOT run `openclaw gateway restart` on Windows** — ask the user to manually restart instead
 - **Ollama API key**: `ec2ba16d039a4739ab397eb993c62315.P86I5g42PSMSBEQLLTwOQlfa`
-- **OpenAI credentials MUST be in auth-profiles.json, not just env vars** — for fallback to work, all providers need registered auth profiles
-- **Watchdog task caused false positives** — disabled in favor of OpenClaw's native auto-fallback mechanism which is more reliable
-- **OpenRouter API key**: `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`
-- **Perplexity Sonar Pro Search** via OpenRouter = `openrouter/perplexity/sonar-pro-search` (alias: `search`) — use this for ALL web searches
-- **Heartbeat model**: `ollama/llama3.3:latest` — free, runs locally, no rate limits. Handles simple tool calls fine.
-- **Model cost strategy**: Main chat = Claude Sonnet (paid, worth it). Heartbeats = Ollama (free). Emergency fallbacks = OpenAI.
-- **OpenAI credentials MUST be in auth-profiles.json, not just env vars** — for fallback to work, all providers need registered auth profiles
-- **Watchdog task caused false positives** — disabled in favor of OpenClaw's native auto-fallback mechanism which is more reliable
+- **Heartbeat model**: `ollama/llama3.3:latest` — free, runs locally, no rate limits

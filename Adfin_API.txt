@@ -1,0 +1,3 @@
+Username: tRIvvEZjblZzt58f85wEroiiq7diUuRF
+Password: XREjXxTv1cc2qhC_6-fpKRPL74Bo8MBT8emftA4JuUCbfMqhX9Vse0JkVeYh7rRN
+Redirect_URI: http://localhost:8000/callback
