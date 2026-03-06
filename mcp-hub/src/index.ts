@@ -7,6 +7,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import * as dotenv from "dotenv";
 import { registerUCM6308Tools } from "./modules/ucm6308/index.js";
+import { registerUCM6308WebSocketTools } from "./modules/ucm6308-websocket/index.js";
 import { registerCompaniesHouseTools } from "./modules/companies-house/index.js";
 import { registerHMRCTools } from "./modules/hmrc/index.js";
 import { registerEmploymentHeroTools } from "./modules/employment-hero/index.js";
@@ -25,8 +26,11 @@ const server = new McpServer({
 
 // ── Register all modules ───────────────────────────────────────────────────────
 
-// Priority 1: Phone System
+// Priority 1: Phone System (REST API)
 registerUCM6308Tools(server);
+
+// Real-time events (WebSocket)
+registerUCM6308WebSocketTools(server);
 
 // Accounting & Finance
 registerCompaniesHouseTools(server);
