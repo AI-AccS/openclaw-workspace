@@ -56,7 +56,7 @@ We run several successful businesses together:
 
 ## Key Projects
 
-### Project 1: Grandstream Wave → UCM6308 Direct Connection — COMPLETE
+### Project 1: Grandstream Wave → UCM6308 Direct Connection — IN PROGRESS
 
 **Infrastructure (all confirmed working 2026-02-23):**
 - UCM6308 internal IP: `192.168.1.148` ← **always use this for access (same network as MSI)**
@@ -71,10 +71,11 @@ We run several successful businesses together:
 - RTP Media: external 10000-20000 UDP → 192.168.1.148:10000-20000
 - Web UI: external 8080 TCP → 192.168.1.148:80
 
-**Next steps:**
-1. ✅ DNS done — tel.scot.ltd → 81.137.249.200
-2. Check/set UCM6308 NAT settings (external host = **tel.scot.ltd**) — UCM credentials stored in mcp-hub/config/.env (UCM_USER=Brigain, UCM_PASS=Jen!fer1) but "Brigain" may be display name not login username — API returned wrong-password error, need to verify actual login username before retrying (48 attempts remain before lockout)
-3. Configure each Wave app with: SIP Server = tel.scot.ltd, Port = 5060, Auth = extension + password
+**Status (2026-03-06):**
+- ✅ DNS configured — tel.scot.ltd → 81.137.249.200
+- ⚠️ UCM login verification needed — "Brigain" may be display name, not username (API returned wrong-password error, 48 attempts remain before lockout)
+- ✅ CDR API credentials added: `cdrapi` / `cdrapi123` → saved to mcp-hub/config/.env
+- ⏳ Next: Extract WebSocket API docs from Grandstream (needs browser access)
 
 **Wave configuration (per user):**
 - SIP Server: **tel.scot.ltd**
@@ -153,3 +154,4 @@ We run several successful businesses together:
 - **Do NOT run `openclaw gateway restart` on Windows** — ask the user to manually restart instead
 - **Ollama API key**: `ec2ba16d039a4739ab397eb993c62315.P86I5g42PSMSBEQLLTwOQlfa`
 - **Heartbeat model**: `ollama/llama3.3:latest` — free, runs locally, no rate limits
+- **Context management (2026-03-06):** Save key decisions/actions to MEMORY.md regularly; summarize/archive old session details when context > 50% to prevent data loss from crashes

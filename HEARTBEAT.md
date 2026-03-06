@@ -15,6 +15,11 @@ Every heartbeat, run these checks silently. Only alert if something needs attent
 - **ALERT** if context > 85% — tell the user: "⚠️ Context window at X% — I may need to start a fresh session soon."
 - At 90%+ recommend session restart
 
+### 1b. Auto-Save Progress (NEW)
+- Every heartbeat, check `memory/YYYY-MM-DD.md` for today's work
+- If significant progress since last save → consolidate key decisions/actions into MEMORY.md
+- **Proactive context management:** When context > 50%, auto-summarize and archive old session details to memory files
+
 ### 2. Model Availability Check
 - **Only model:** `ollama/llama3.3:latest` (LOCAL — free, no rate limits)
 - If NOT running on this model: alert "⚠️ Running on wrong model [X]" and ask user to restart gateway
