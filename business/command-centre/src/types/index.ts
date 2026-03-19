@@ -98,3 +98,12 @@ export interface OKR {
   actual: number;
   progress: number;
 }
+
+export interface Idea {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  priority: Priority;
+  estimatedValue: string;
+}

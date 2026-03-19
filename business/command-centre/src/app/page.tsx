@@ -7,7 +7,7 @@ import { SortableContext, sortableKeyboardCoordinates, useSortable } from '@dnd-
 import { CSS } from '@dnd-kit/utilities';
 import { sampleData } from '@/data/sampleData';
 import { Task, Priority, Status } from '@/types';
-import { CircleAlert, CheckCircle2, Clock, Flag, GitCommit, Lock, MessageSquare, Paperclip, User, Plus } from 'lucide-react';
+import { CircleAlert, CheckCircle2, Clock, Flag, GitCommit, Lightbulb, Lock, MessageSquare, Paperclip, User, Plus } from 'lucide-react';
 import TaskModal from '@/components/TaskModal';
 import FilterBar from '@/components/FilterBar';
 import TaskCreationForm from '@/components/TaskCreationForm';
@@ -184,7 +184,28 @@ export default function CommandCentre() {
     assignee: 'all',
   });
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
-  const [newIdeas, setNewIdeas] = useState<Task[]>([]);
+  // Initialize with AI-generated ideas from sampleData
+  const [newIdeas, setNewIdeas] = useState<Task[]>(() => {
+    if (sampleData.ideas && Array.isArray(sampleData.ideas)) {
+      return sampleData.ideas.map((idea: any) => ({
+        id: idea.id,
+        title: idea.title,
+        description: idea.description,
+        projectId: 'ai-ideas',
+        priority: idea.priority as Priority,
+        status: 'new-idea' as Status,
+        assignee: 'both' as Assignee,
+        progress: 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        checklist: [],
+        dependencies: [],
+        category: idea.category,
+        estimatedValue: idea.estimatedValue,
+      }));
+    }
+    return [];
+  });
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
