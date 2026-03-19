@@ -11,6 +11,8 @@ import { CircleAlert, CheckCircle2, Clock, Flag, GitCommit, Lock, MessageSquare,
 import TaskModal from '@/components/TaskModal';
 import FilterBar from '@/components/FilterBar';
 import TaskCreationForm from '@/components/TaskCreationForm';
+import TodayFocus from '@/components/TodayFocus';
+import GoalsHierarchy from '@/components/GoalsHierarchy';
 
 // Priority colors and labels
 const priorityConfig = {
@@ -337,6 +339,12 @@ export default function CommandCentre() {
           onClose={() => setIsCreateFormOpen(false)} 
           onCreateTask={handleCreateTask}
         />
+
+        {/* Goals Hierarchy */}
+        <GoalsHierarchy projects={sampleData.projects} />
+
+        {/* Today's Focus - Smart Queue */}
+        <TodayFocus tasks={tasks} onSelectTask={handleCardClick} />
 
         {/* Filter Bar */}
         <FilterBar tasks={tasks} onFilterChange={handleFilterChange} activeFilters={filters} />
