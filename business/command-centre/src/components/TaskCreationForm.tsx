@@ -4,15 +4,18 @@ import { useState } from 'react';
 import { X, Plus, Calendar, User, AlertTriangle, GitCommit } from 'lucide-react';
 import { Task, Priority, Status } from '@/types';
 import { motion, AnimatePresence } from 'framer-motion';
+import TemplateManager from './TemplateManager';
 
 export default function TaskCreationForm({ 
   isOpen, 
   onClose, 
-  onCreateTask 
+  onCreateTask,
+  onUseTemplate
 }: { 
   isOpen: boolean; 
   onClose: () => void; 
   onCreateTask: (task: Partial<Task>) => void;
+  onUseTemplate?: (template: any) => void;
 }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -21,6 +24,7 @@ export default function TaskCreationForm({
   const [assignee, setAssignee] = useState<'dawn' | 'human' | 'both'>('dawn');
   const [dueDate, setDueDate] = useState('');
   const [phaseId, setPhaseId] = useState('');
+  const [showTemplates, setShowTemplates] = useState(false);
 
   const phases = [
     { id: 'phase-1', name: 'Phase 1: UCM6308 API Integration' },
@@ -99,6 +103,23 @@ export default function TaskCreationForm({
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
+            {/* Use Template Button */}
+            <div className="flex justify-between items-center pb-4 border-b border-card-border">
+              <button
+                type="button"
+                onClick={() => setShowTemplates(!showTemplates)}
+                className="flex items-center gap-2 text-sm text-primary hover:text-primary-hover font-semibold transition-colors"
+              >
+                <GitCommit className="w-4 h-4" />
+                <span>{showTemplates ? 'Hide Templates' : 'Use Template'}</span>
+              </button>
+            </div>
+
+            {/* Template Manager Section */}
+            {showTemplates && onUseTemplate && (
+              <TemplateManager onUseTemplate={onUseTemplate} onSaveTemplate={onUseTemplate} />
+            )}
+
             {/* Title */}
             <div>
               <label className="block text-sm font-semibold text-muted uppercase tracking-wider mb-2">

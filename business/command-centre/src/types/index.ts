@@ -2,7 +2,7 @@
 
 export type Priority = 'urgent' | 'high' | 'medium' | 'low';
 
-export type Status = 'backlog' | 'todo' | 'in-progress' | 'blocked' | 'review' | 'done';
+export type Status = 'new-idea' | 'backlog' | 'todo' | 'in-progress' | 'blocked' | 'review' | 'done';
 
 export type Assignee = 'dawn' | 'human' | 'both';
 
@@ -13,12 +13,21 @@ export interface ChecklistItem {
   completedDate?: string;
 }
 
+export interface Subtask {
+  id: string;
+  title: string;
+  completed: boolean;
+  dueDate?: string;
+}
+
 export interface Task {
   id: string;
   title: string;
   description: string;
   projectId: string;
   phaseId?: string;
+  parentTaskId?: string; // Reference to parent task for subtask hierarchy
+  templateId?: string; // Reference to template this was created from
   priority: Priority;
   status: Status;
   assignee: Assignee;
@@ -26,7 +35,10 @@ export interface Task {
   actualTime?: number;
   dependencies: string[]; // Task IDs
   checklist: ChecklistItem[];
+  subtasks?: Subtask[]; // Subtasks
   progress: number; // 0-100
+  repeatInterval?: 'daily' | 'weekly' | 'monthly' | 'yearly' | 'custom';
+  repeatNextDate?: string; // Next scheduled creation date
   createdAt: string;
   dueDate?: string;
   completedDate?: string;

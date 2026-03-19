@@ -3,6 +3,7 @@
 import { X, Calendar, AlertCircle, Clock, CheckCircle2, MessageSquare, Paperclip, User, AlertTriangle } from 'lucide-react';
 import { Task, Priority } from '@/types';
 import { motion, AnimatePresence } from 'framer-motion';
+import SubtaskManager from './SubtaskManager';
 
 const priorityConfig = {
   urgent: { color: 'bg-red-500', label: 'Urgent', ring: 'ring-red-500' },
@@ -11,7 +12,15 @@ const priorityConfig = {
   low: { color: 'bg-green-500', label: 'Low', ring: 'ring-green-500' },
 };
 
-export default function TaskModal({ task, onClose }: { task: Task; onClose: () => void }) {
+export default function TaskModal({ 
+  task, 
+  onClose,
+  onUpdateSubtasks 
+}: { 
+  task: Task; 
+  onClose: () => void;
+  onUpdateSubtasks?: (task: Task, subtasks: any[]) => void;
+}) {
   const priority = priorityConfig[task.priority];
   
   // Calculate due date status
@@ -193,6 +202,14 @@ export default function TaskModal({ task, onClose }: { task: Task; onClose: () =
                   ))}
                 </div>
               </div>
+            )}
+
+            {/* Subtasks */}
+            {onUpdateSubtasks && (
+              <SubtaskManager 
+                task={task} 
+                onUpdateSubtasks={onUpdateSubtasks}
+              />
             )}
 
             {/* Metadata Grid */}

@@ -13,6 +13,8 @@ import FilterBar from '@/components/FilterBar';
 import TaskCreationForm from '@/components/TaskCreationForm';
 import TodayFocus from '@/components/TodayFocus';
 import GoalsHierarchy from '@/components/GoalsHierarchy';
+import SubtaskManager from '@/components/SubtaskManager';
+import NewIdeasColumn from '@/components/NewIdeasColumn';
 
 // Priority colors and labels
 const priorityConfig = {
@@ -24,6 +26,7 @@ const priorityConfig = {
 
 // Status columns configuration
 const statusColumns = [
+  { id: 'new-idea', label: 'New Ideas', color: 'border-sky-500', icon: Lightbulb },
   { id: 'backlog', label: 'Backlog', color: 'border-slate-500' },
   { id: 'todo', label: 'Todo', color: 'border-blue-500' },
   { id: 'in-progress', label: 'In Progress', color: 'border-purple-500' },
@@ -181,6 +184,7 @@ export default function CommandCentre() {
     assignee: 'all',
   });
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+  const [newIdeas, setNewIdeas] = useState<Task[]>([]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -208,6 +212,63 @@ export default function CommandCentre() {
       attachments: [],
     };
     setTasks(prev => [...prev, task]);
+  };
+
+  // Handle new idea creation
+  const handleAddIdea = (newIdea: Partial<Task>) => {
+    const idea: Task = {
+      id: `idea-${Date.now()}`,
+      title: newIdea.title || 'New Idea',
+      description: newIdea.description || '',
+      projectId: 'proj-1',
+      priority: newIdea.priority || 'low',
+      status: 'new-idea',
+      assignee: newIdea.assignee || 'both',
+      progress: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      checklist: [],
+      dependencies: [],
+    };
+    setNewIdeas(prev => [...prev, idea]);
+  };
+
+  // Handle idea deletion
+  const handleDeleteIdea = (ideaId: string) => {
+    setNewIdeas(prev => prev.filter(idea => idea.id !== ideaId));
+  };
+
+  // Promote idea to task
+  const handlePromoteIdeaToTask = (idea: Task) => {
+    const task: Task = {
+      ...idea,
+      id: `task-${Date.now()}`,
+      status: 'backlog',
+      phaseId: idea.phaseId || '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    setTasks(prev => [...prev, task]);
+    setNewIdeas(prev => prev.filter(i => i.id !== idea.id));
+  };
+
+  // Handle subtask updates
+  const handleUpdateSubtasks = (task: Task, subtasks: any[]) => {
+    setTasks(prev => prev.map(t => {
+      if (t.id === task.id) {
+        const completedCount = subtasks.filter(s => s.completed).length;
+        const totalCount = subtasks.length;
+        const subtaskProgress = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+        
+        return {
+          ...t,
+          subtasks,
+          progress: Math.max(t.progress, subtaskProgress), // Update main task progress based on subtasks
+          updatedAt: new Date().toISOString(),
+        };
+      }
+      return t;
+    }));
   };
 
   // Filter tasks
@@ -281,7 +342,7 @@ export default function CommandCentre() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Task Modal */}
-      {selectedTask && <TaskModal task={selectedTask} onClose={() => setSelectedTask(null)} />}
+      {selectedTask && <TaskModal task={selectedTask} onClose={() => setSelectedTask(null)} onUpdateSubtasks={handleUpdateSubtasks} />}
 
       {/* Header */}
       <header className="border-b border-card-border sticky top-0 bg-background/95 backdrop-blur-sm z-10">
@@ -338,6 +399,7 @@ export default function CommandCentre() {
           isOpen={isCreateFormOpen} 
           onClose={() => setIsCreateFormOpen(false)} 
           onCreateTask={handleCreateTask}
+          onUseTemplate={handleUseTemplate}
         />
 
         {/* Goals Hierarchy */}
@@ -368,14 +430,26 @@ export default function CommandCentre() {
           onDragOver={onDragOver}
           onDragEnd={onDragEnd}
         >
-          <div className="grid grid-cols-6 gap-4">
-            {statusColumns.map(column => (
-              <div key={column.id} className="flex flex-col">
-                <div className={`flex items-center justify-between pb-3 border-b-2 ${column.color} mb-3`}>
-                  <h2 className="font-semibold text-sm uppercase tracking-wider">
-                    {column.label}
-                  </h2>
-                  <span className="bg-card-border text-muted text-xs px-2 py-1 rounded-full">
+          <div className="grid grid-cols-7 gap-3">
+            {/* New Ideas Column (not draggable) */}
+            <div className="flex flex-col">
+              <NewIdeasColumn
+                ideas={newIdeas}
+                onAddIdea={handleAddIdea}
+                onDeleteIdea={handleDeleteIdea}
+                onPromoteToTask={handlePromoteIdeaToTask}
+              />
+            </div>
+
+            {/* Status Columns (draggable) */}
+            <div className="col-span-6 grid grid-cols-6 gap-3">
+              {statusColumns.filter(col => col.id !== 'new-idea').map(column => (
+                <div key={column.id} className="flex flex-col">
+                  <div className={`flex items-center justify-between pb-3 border-b-2 ${column.color} mb-3`}>
+                    <h2 className="font-semibold text-sm uppercase tracking-wider">
+                      {column.label}
+                    </h2>
+                    <span className="bg-card-border text-muted text-xs px-2 py-1 rounded-full">
                     {getTasksByStatus(column.id as Status).length}
                   </span>
                 </div>
