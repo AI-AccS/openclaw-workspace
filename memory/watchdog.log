@@ -1,8 +1,0 @@
-2026-02-23 10:38:17  OK — using anthropic/claude-sonnet-4-6
-2026-02-23 10:43:17  OK — using anthropic/claude-sonnet-4-6
-2026-02-23 10:48:17  OK — using anthropic/claude-sonnet-4-6
-2026-02-23 10:53:17  Anthropic in cooldown for 12s more
-2026-02-23 10:53:17  Rate limit detected — switching primary to openai/gpt-4o
-2026-02-23 10:55:13  Switched to openai/gpt-4o and restarted gateway
-2026-02-23 10:58:17  Anthropic cooldown cleared — switching back to anthropic/claude-sonnet-4-6
-2026-02-23 11:00:10  Restored to anthropic/claude-sonnet-4-6 and restarted gateway

@@ -1,9 +1,0 @@
-{
-  "mcpServers": {
-    "mcp-hub": {
-      "command": "node C:/Users/info/.openclaw/workspace/mcp-hub/dist/index.js",
-      "description": "Business MCP Hub — UCM6308, Companies House, HMRC, Employment Hero, Syft, Adfin, Inform Direct, One Gateways"
-    }
-  },
-  "imports": []
-}
